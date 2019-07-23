@@ -59,6 +59,7 @@
 #include <ktexteditor/document.h>
 
 #include "ui/documenttypeswidget.h"
+#include "ui/structurewidget.h"
 #include "ui/codeeditorwidget.h"
 #include "ui/scriptoutputwidget.h"
 #include "ui/sidedockwidget.h"
@@ -231,6 +232,10 @@ QWidget* MainWindow::setupSidePanel()
     // Rocs scripting API documentation
     ScriptApiWidget* apiDoc = new ScriptApiWidget(panel);
     sideDock->addDock(apiDoc, i18nc("@title", "Scripting API"), QIcon::fromTheme("documentation"));
+
+    // adjacency list
+    StructureWidget* structure = new StructureWidget(panel);
+    sideDock->addDock(structure, "Estrutura do Grafo", QIcon::fromTheme("documentation"));
 
     return panel;
 }
