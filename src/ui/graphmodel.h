@@ -21,26 +21,34 @@
 #ifndef GRAPHMODEL_H
 #define GRAPHMODEL_H
 
+#include "libgraphtheory/graphdocument.h"
 #include <QAbstractTableModel>
 #include <QList>
-#include <QString>
+#include <QVector>
+
+using namespace GraphTheory;
 
 class GraphModel : public QAbstractTableModel
 {
-  Q_OBJECT
+    Q_OBJECT
+
 public:
-  GraphModel(QObject *parent = nullptr);
+    GraphModel(QObject *parent = nullptr);
 
-  void setGraph(const QList<QString> &edges, const QList<QString> &nodes);
+    void setGraph(GraphTheory::GraphDocumentPtr graph);
 
-  int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-  int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-  QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
 private:
-  QList<QString> m_edges;
-  QList<QString> m_nodes;
+    GraphTheory::GraphDocumentPtr m_graph = nullptr;
+    int* m_matrix = nullptr;
+
+    int* createMatrix();
+    void calculateAdjancencyMatrix();
+    void printMatrix();
 };
 
 #endif

@@ -78,6 +78,7 @@ MainWindow::MainWindow()
     , m_codeEditorWidget(new CodeEditorWidget(this))
     , m_graphEditorWidget(new GraphEditorWidget(this))
     , m_outputWidget(new ScriptOutputWidget(this))
+    , m_structure(new StructureWidget(this))
 {
     setObjectName("RocsMainWindow");
     m_graphEditor = new GraphTheory::Editor();
@@ -234,8 +235,8 @@ QWidget* MainWindow::setupSidePanel()
     sideDock->addDock(apiDoc, i18nc("@title", "Scripting API"), QIcon::fromTheme("documentation"));
 
     // adjacency list
-    StructureWidget* structure = new StructureWidget(panel);
-    sideDock->addDock(structure, "Estrutura do Grafo", QIcon::fromTheme("documentation"));
+    m_structure = new StructureWidget(panel);
+    sideDock->addDock(m_structure, "Estrutura do Grafo", QIcon::fromTheme("documentation"));
 
     return panel;
 }
@@ -244,6 +245,7 @@ void MainWindow::setProject(Project *project)
 {
     m_codeEditorWidget->setProject(project);
     m_graphEditorWidget->setProject(project);
+    m_structure->setProject(project);
     m_journalWidget->openJournal(project);
     updateCaption();
 

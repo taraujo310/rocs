@@ -22,6 +22,9 @@
 #define STRUCTUREWIDGET_H
 
 #include <QWidget>
+#include <QTableView>
+#include "project/project.h"
+#include "graphmodel.h"
 
 class StructureWidget : public QWidget
 {
@@ -29,6 +32,15 @@ class StructureWidget : public QWidget
 
 public:
     explicit StructureWidget(QWidget* parent);
+    void setProject(Project *project);
+
+private Q_SLOTS:
+    void onGraphDocumentChange(GraphTheory::GraphDocumentPtr document);
+
+private:
+    Project *m_project; //!< current project
+    QTableView *m_graphStructureTable;
+    GraphModel *m_graphModel;
 };
 
 #endif

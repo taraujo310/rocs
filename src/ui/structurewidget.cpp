@@ -18,6 +18,7 @@
 
 #include "structurewidget.h"
 #include "graphmodel.h"
+#include "project/project.h"
 #include <QGridLayout>
 #include <QLabel>
 #include <QTableView>
@@ -26,29 +27,38 @@
 
 StructureWidget::StructureWidget(QWidget* parent)
     : QWidget(parent)
+    , m_project(Q_NULLPTR)
 {
+    m_graphModel = new GraphModel(this);
+    m_graphStructureTable = new QTableView(this);
+}
+
+void StructureWidget::setProject(Project *project)
+{
+    if (m_project) {
+        m_project->disconnect(this);
+    }
+
+    m_project = project;
+
+    connect(project, static_cast<void (Project::*)(GraphTheory::GraphDocumentPtr)>(&Project::activeGraphDocumentChanged),
+        this, &StructureWidget::onGraphDocumentChange);
+
     QGridLayout *layout = new QGridLayout(this);
     layout->addWidget(new QLabel("Matriz de Adjacência"));
 
-    QList<QString> edges;
-    QList<QString> nodes;
+    GraphTheory::GraphDocumentPtr graph = m_project->activeGraphDocument();
 
-    edges.append("1");
-    edges.append("2");
-    edges.append("3");
-    edges.append("4");
+    m_graphModel->setGraph(graph);
 
-    nodes.append("a");
-    nodes.append("b");
-    nodes.append("c");
-    nodes.append("d");
-
-    GraphModel *graph = new GraphModel();
-    graph->setGraph(edges, nodes);
-
-    QTableView *GraphStructure = new QTableView;
-    GraphStructure->setModel(graph);
-    layout->addWidget(GraphStructure);
+    m_graphStructureTable->setModel(m_graphModel);
+    layout->addWidget(m_graphStructureTable);
 
     layout->addWidget(new QLabel("Matriz de Incidência"));
+}
+
+void StructureWidget::onGraphDocumentChange(GraphTheory::GraphDocumentPtr document)
+{
+    GraphTheory::GraphDocumentPtr graph = document;
+    m_graphModel->setGraph(graph);
 }
