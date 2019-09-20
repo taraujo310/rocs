@@ -61,7 +61,7 @@ int GraphModel::columnCount(const QModelIndex &parent) const
 QVariant GraphModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole) {
-        return 1;
+        return {};
     }
 
     return m_matrix[m_graph->nodes().size() * index.row() + index.column()];
