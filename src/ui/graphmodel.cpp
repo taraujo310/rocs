@@ -16,10 +16,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <iostream>
 #include "graphmodel.h"
-#include "libgraphtheory/edge.h"
-#include "libgraphtheory/graphdocument.h"
+#include "libgraphtheory/adjacencymatrix.h"
 
 using namespace GraphTheory;
 
@@ -37,8 +35,10 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
         delete[] m_matrix;
     }
 
-    m_matrix = this->createMatrix();
-    this->calculateAdjancencyMatrix();
+    m_matrix = new AdjacencyMatrix(graph);
+
+    m_matrix->create();
+    m_matrix->calculate();
 
     endResetModel();
 
@@ -64,64 +64,14 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
         return {};
     }
 
-    return m_matrix[m_graph->nodes().size() * index.row() + index.column()];
+    return m_matrix->getValue(index.row(), index.column());
 }
 
 QVariant GraphModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
+    Q_UNUSED(orientation);
     if (role == Qt::DisplayRole) {
         return m_graph->nodes().at(section)->id();
     }
     return QVariant();
-}
-
-int* GraphModel::createMatrix() {
-    int size = m_graph->nodes().size();
-    int *matrix = new int[size * size];
-
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            matrix[size * i + j] = 0;
-        }
-    }
-
-    return matrix;
-}
-
-void GraphModel::calculateAdjancencyMatrix()
-{
-    int size = m_graph->nodes().size();
-
-    for (int i = 0; i < size; i++) {
-        NodePtr rowNode = m_graph->nodes().at(i);
-
-        for (int j = 0; j < rowNode->edges().size(); j++) {
-            EdgePtr edge = rowNode->edges().at(j);
-
-            NodePtr fromNode = edge.get()->to();
-            NodePtr toNode = edge.get()->from();
-
-            if (fromNode->id() == toNode->id()) { // edge is a Loop
-                m_matrix[size * i + i] = 1;
-            } else {
-                NodePtr columnNode = (rowNode->id() == fromNode->id()) ? toNode : fromNode;
-                int index = m_graph->nodes().indexOf(columnNode);
-
-                m_matrix[size * i + index] = 1;
-            }
-        }
-    }
-
-    return;
-}
-
-void GraphModel::printMatrix()
-{
-    int size = m_graph->nodes().size();
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            std::cout << m_matrix[size * i + j] << " ";
-        }
-        std::cout << "\n";
-    }
 }

@@ -22,9 +22,8 @@
 #define GRAPHMODEL_H
 
 #include "libgraphtheory/graphdocument.h"
+#include "libgraphtheory/adjacencymatrix.h"
 #include <QAbstractTableModel>
-#include <QList>
-#include <QVector>
 
 using namespace GraphTheory;
 
@@ -44,11 +43,7 @@ public:
 
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
-    int* m_matrix = nullptr;
-
-    int* createMatrix();
-    void calculateAdjancencyMatrix();
-    void printMatrix();
+    AdjancencyMatrix m_matrix = nullptr;
 };
 
 #endif
