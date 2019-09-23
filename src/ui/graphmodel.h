@@ -42,6 +42,9 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
 
 private:
+    void generateMatrix();
+
+private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
     GraphTheory::AdjacencyMatrix *m_matrix = nullptr;
 };

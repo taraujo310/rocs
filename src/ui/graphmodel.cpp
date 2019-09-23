@@ -31,14 +31,7 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
 
     m_graph = graph;
 
-    if (m_matrix) {
-        m_matrix->destroy();
-    }
-
-    m_matrix = new AdjacencyMatrix(graph);
-
-    m_matrix->create();
-    m_matrix->calculate();
+    this->generateMatrix();
 
     endResetModel();
 
@@ -74,4 +67,15 @@ QVariant GraphModel::headerData(int section, Qt::Orientation orientation, int ro
         return m_graph->nodes().at(section)->id();
     }
     return QVariant();
+}
+
+void GraphModel::generateMatrix()
+{
+    if (m_matrix) {
+        m_matrix->destroy();
+    }
+
+    m_matrix = new AdjacencyMatrix(m_graph);
+    m_matrix->create();
+    m_matrix->calculate();
 }
