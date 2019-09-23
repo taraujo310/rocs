@@ -24,7 +24,10 @@
 #include "edge.h"
 #include "graphdocument.h"
 
-class AdjacencyMatrix : public QObject
+namespace GraphTheory
+{
+
+class GRAPHTHEORY_EXPORT AdjacencyMatrix : public QObject
 {
     Q_OBJECT
 
@@ -33,11 +36,13 @@ public:
     int* create();
     void calculate();
     void print();
+    void destroy();
     int getValue(int i, int j);
 
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
     int* m_matrix = nullptr;
 };
+}
 
 #endif

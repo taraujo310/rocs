@@ -32,7 +32,7 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
     m_graph = graph;
 
     if (m_matrix) {
-        delete[] m_matrix;
+        m_matrix->destroy();
     }
 
     m_matrix = new AdjacencyMatrix(graph);

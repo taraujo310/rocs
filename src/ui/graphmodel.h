@@ -43,7 +43,7 @@ public:
 
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
-    AdjancencyMatrix m_matrix = nullptr;
+    GraphTheory::AdjacencyMatrix *m_matrix = nullptr;
 };
 
 #endif

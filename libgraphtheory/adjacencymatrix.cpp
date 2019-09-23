@@ -16,12 +16,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QSharedPointer>
+#include <QVector>
 #include <iostream>
-#include "typenames.h"
-#include "node.h"
-#include "edge.h"
-#include "graphdocument.h"
 #include "adjacencymatrix.h"
+#include "graphdocument.h"
+#include "edge.h"
+#include "node.h"
+#include "typenames.h"
 
 using namespace GraphTheory;
 
@@ -32,15 +34,15 @@ AdjacencyMatrix::AdjacencyMatrix(GraphTheory::GraphDocumentPtr graph) : QObject(
 
 int* AdjacencyMatrix::create() {
     int size = m_graph->nodes().size();
-    int *matrix = new int[size * size];
+    m_matrix = new int[size * size];
 
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            matrix[size * i + j] = 0;
+            m_matrix[size * i + j] = 0;
         }
     }
 
-    return matrix;
+    return m_matrix;
 }
 
 void AdjacencyMatrix::calculate()
@@ -84,4 +86,12 @@ void AdjacencyMatrix::print()
 int AdjacencyMatrix::getValue(int i, int j)
 {
     return m_matrix[m_graph->nodes().size() * i + j];
+}
+
+void AdjacencyMatrix::destroy()
+{
+    if (m_matrix) {
+        delete[] m_matrix;
+    }
+    return;
 }
