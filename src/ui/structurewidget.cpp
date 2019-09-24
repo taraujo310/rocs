@@ -24,6 +24,7 @@
 #include <QTableView>
 #include <QList>
 #include <QString>
+#include <QtGlobal>
 
 StructureWidget::StructureWidget(QWidget* parent)
     : QWidget(parent)
@@ -41,9 +42,8 @@ void StructureWidget::setProject(Project *project)
 
     m_project = project;
 
-    connect(project, static_cast<void (Project::*)(GraphTheory::GraphDocumentPtr)>(&Project::activeGraphDocumentChanged),
+    connect(project, QOverload<GraphTheory::GraphDocumentPtr>::of(&Project::activeGraphDocumentChanged),
         this, &StructureWidget::onGraphDocumentChange);
-
 
     this->mountLayout();
 }
