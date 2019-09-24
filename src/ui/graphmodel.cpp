@@ -18,6 +18,8 @@
 
 #include "graphmodel.h"
 #include "libgraphtheory/adjacencymatrix.h"
+#include "libgraphtheory/graphdocument.h"
+#include <QtGlobal>
 
 using namespace GraphTheory;
 
@@ -29,9 +31,21 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
 {
     beginResetModel();
 
-    m_graph = graph;
+    if (m_graph) {
+        m_graph->disconnect(this);
+    }
 
+    m_graph = graph;
     this->generateMatrix();
+
+    connect(graph, QOverload<>::of(&GraphTheory::GraphDocument::nodeAdded),
+        this, &GraphModel::generateMatrix);
+    // connect(graph, QOverload<>::of(&GraphTheory::GraphDocument::nodesRemoved),
+    //     this, &GraphModel::generateMatrix);
+    // connect(graph, QOverload<>::of(&GraphTheory::GraphDocument::edgeAdded),
+    //     this, &GraphModel::generateMatrix);
+    // connect(graph, QOverload<>::of(&GraphTheory::GraphDocument::edgesRemoved),
+    //     this, &GraphModel::generateMatrix);
 
     endResetModel();
 
