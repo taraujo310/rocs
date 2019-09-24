@@ -38,14 +38,14 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
     m_graph = graph;
     this->generateMatrix();
 
-    connect(graph, QOverload<>::of(&GraphTheory::GraphDocument::nodeAdded),
-        this, &GraphModel::generateMatrix);
-    // connect(graph, QOverload<>::of(&GraphTheory::GraphDocument::nodesRemoved),
-    //     this, &GraphModel::generateMatrix);
-    // connect(graph, QOverload<>::of(&GraphTheory::GraphDocument::edgeAdded),
-    //     this, &GraphModel::generateMatrix);
-    // connect(graph, QOverload<>::of(&GraphTheory::GraphDocument::edgesRemoved),
-    //     this, &GraphModel::generateMatrix);
+    connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::nodeAdded),
+        this, &GraphModel::onGraphChanged);
+    connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::nodesRemoved),
+        this, &GraphModel::onGraphChanged);
+    connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::edgeAdded),
+        this, &GraphModel::onGraphChanged);
+    connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::edgesRemoved),
+        this, &GraphModel::onGraphChanged);
 
     endResetModel();
 
@@ -81,6 +81,12 @@ QVariant GraphModel::headerData(int section, Qt::Orientation orientation, int ro
         return m_graph->nodes().at(section)->id();
     }
     return QVariant();
+}
+
+void GraphModel::onGraphChanged()
+{
+    this->setGraph(m_graph);
+    return;
 }
 
 void GraphModel::generateMatrix()

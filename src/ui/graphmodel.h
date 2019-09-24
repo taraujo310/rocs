@@ -43,6 +43,7 @@ public:
 
 private:
     void generateMatrix();
+    void onGraphChanged();
 
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
