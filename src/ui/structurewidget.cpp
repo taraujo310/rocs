@@ -44,6 +44,18 @@ void StructureWidget::setProject(Project *project)
     connect(project, static_cast<void (Project::*)(GraphTheory::GraphDocumentPtr)>(&Project::activeGraphDocumentChanged),
         this, &StructureWidget::onGraphDocumentChange);
 
+
+    this->mountLayout();
+}
+
+void StructureWidget::onGraphDocumentChange(GraphTheory::GraphDocumentPtr document)
+{
+    GraphTheory::GraphDocumentPtr graph = document;
+    m_graphModel->setGraph(graph);
+}
+
+void StructureWidget::mountLayout()
+{
     QGridLayout *layout = new QGridLayout(this);
     layout->addWidget(new QLabel("Matriz de Adjacência"));
 
@@ -55,10 +67,4 @@ void StructureWidget::setProject(Project *project)
     layout->addWidget(m_graphStructureTable);
 
     layout->addWidget(new QLabel("Matriz de Incidência"));
-}
-
-void StructureWidget::onGraphDocumentChange(GraphTheory::GraphDocumentPtr document)
-{
-    GraphTheory::GraphDocumentPtr graph = document;
-    m_graphModel->setGraph(graph);
 }

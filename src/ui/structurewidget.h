@@ -34,6 +34,9 @@ public:
     explicit StructureWidget(QWidget* parent);
     void setProject(Project *project);
 
+private:
+    void mountLayout();
+
 private Q_SLOTS:
     void onGraphDocumentChange(GraphTheory::GraphDocumentPtr document);
 
