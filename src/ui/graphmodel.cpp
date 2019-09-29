@@ -20,6 +20,7 @@
 #include "libgraphtheory/adjacencymatrix.h"
 #include "libgraphtheory/graphdocument.h"
 #include <QtGlobal>
+#include <iostream>
 
 using namespace GraphTheory;
 
@@ -33,10 +34,16 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
 
     if (m_graph) {
         m_graph->disconnect(this);
+
+        for (int i = 0; i < m_graph->edges().size(); i++) {
+            EdgePtr edge = m_graph->edges().at(i);
+            edge->disconnect(this);
+        }
     }
 
     m_graph = graph;
     this->generateMatrix();
+
 
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::nodeAdded),
         this, &GraphModel::onGraphChanged);
@@ -46,6 +53,13 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
         this, &GraphModel::onGraphChanged);
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::edgesRemoved),
         this, &GraphModel::onGraphChanged);
+
+    for (int i = 0; i < m_graph->edges().size(); i++) {
+        EdgePtr edge = m_graph->edges().at(i);
+
+        connect(edge.get(), QOverload<int>::of(&GraphTheory::Edge::dynamicPropertyChanged),
+            this, &GraphModel::onPropertyChange, Qt::UniqueConnection);
+    }
 
     endResetModel();
 
@@ -98,4 +112,19 @@ void GraphModel::generateMatrix()
     m_matrix = new AdjacencyMatrix(m_graph);
     m_matrix->create();
     m_matrix->calculate();
+}
+
+void GraphModel::onPropertyChange(int index) {
+    Edge* edge = qobject_cast<Edge*>(sender());
+
+    int row = m_graph->nodes().indexOf(edge->from());
+    int column = m_graph->nodes().indexOf(edge->to());
+
+    int weight = edge->dynamicProperty("weight").toInt();
+
+    m_matrix->setValue(row, column, weight);
+
+    if (edge->type()->direction() == EdgeType::Direction::Bidirectional) {
+        m_matrix->setValue(column, row, weight);
+    }
 }

@@ -44,6 +44,7 @@ public:
 private:
     void generateMatrix();
     void onGraphChanged();
+    void onPropertyChange(int index);
 
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;

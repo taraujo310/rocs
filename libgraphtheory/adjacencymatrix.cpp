@@ -24,6 +24,7 @@
 #include "edge.h"
 #include "node.h"
 #include "typenames.h"
+#include <QVariant>
 
 using namespace GraphTheory;
 
@@ -59,12 +60,20 @@ void AdjacencyMatrix::calculate()
             NodePtr toNode = edge.get()->from();
 
             if (fromNode->id() == toNode->id()) { // edge is a Loop
-                m_matrix[size * i + i] = 1;
+                m_matrix[size * i + i] = this->getEdgeWeight(edge);
             } else {
-                NodePtr columnNode = (rowNode->id() == fromNode->id()) ? toNode : fromNode;
-                int index = m_graph->nodes().indexOf(columnNode);
+                if (edge->type()->direction() == EdgeType::Direction::Bidirectional) {
+                    NodePtr columnNode = (rowNode->id() == fromNode->id()) ? toNode : fromNode;
+                    int index = m_graph->nodes().indexOf(columnNode);
 
-                m_matrix[size * i + index] = 1;
+                    m_matrix[size * i + index] = this->getEdgeWeight(edge);
+                } else {
+                    if ((rowNode->id() != fromNode->id())) {
+                        int index = m_graph->nodes().indexOf(fromNode);
+
+                        m_matrix[size * i + index] = this->getEdgeWeight(edge);
+                    }
+                }
             }
         }
     }
@@ -88,10 +97,21 @@ int AdjacencyMatrix::getValue(int i, int j)
     return m_matrix[m_graph->nodes().size() * i + j];
 }
 
+void AdjacencyMatrix::setValue(int i, int j, int value)
+{
+    m_matrix[m_graph->nodes().size() * i + j] = value;
+}
+
 void AdjacencyMatrix::destroy()
 {
     if (m_matrix) {
         delete[] m_matrix;
     }
     return;
+}
+
+int AdjacencyMatrix::getEdgeWeight(EdgePtr edge)
+{
+    int weight = edge->dynamicProperty("weight").toInt();
+    return weight ? weight : 1;
 }
