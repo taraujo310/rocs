@@ -45,6 +45,7 @@ private:
     void generateMatrix();
     void onGraphChanged();
     void onPropertyChange(int index);
+    void onEdgeAdded();
 
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;

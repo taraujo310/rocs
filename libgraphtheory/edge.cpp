@@ -78,6 +78,27 @@ EdgePtr Edge::create(NodePtr from, NodePtr to)
     return pi;
 }
 
+EdgePtr Edge::create(NodePtr from, NodePtr to, int typeIndex)
+{
+    Q_ASSERT(from);
+    Q_ASSERT(to);
+    Q_ASSERT(from->document() == to->document());
+    Q_ASSERT(typeIndex < from->document()->edgeTypes().length());
+    EdgePtr pi(new Edge);
+    pi->setQpointer(pi);
+    pi->d->m_from = from;
+    pi->d->m_to = to;
+    pi->setType(from->document()->edgeTypes().at(typeIndex));
+
+    // insert completely initialized edge into nodes' connections
+    to->insert(pi->d->q);
+    from->insert(pi->d->q);
+    to->document()->insert(pi->d->q);
+    pi->d->m_valid = true;
+
+    return pi;
+}
+
 EdgePtr Edge::self() const
 {
     return d->q;

@@ -174,8 +174,7 @@ void View::createEdge(Node *from, Node *to, int typeIndex)
     if (!from->isValid() || !to->isValid()) {
         return;
     }
-    EdgePtr edge = Edge::create(from->self(), to->self());
-    edge->setType(d->m_edgeTypeModel->type(typeIndex));
+    EdgePtr edge = Edge::create(from->self(), to->self(), typeIndex);
 }
 
 void View::deleteNode(GraphTheory::Node *node)

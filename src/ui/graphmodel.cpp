@@ -50,7 +50,7 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::nodesRemoved),
         this, &GraphModel::onGraphChanged);
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::edgeAdded),
-        this, &GraphModel::onGraphChanged);
+        this, &GraphModel::onEdgeAdded);
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::edgesRemoved),
         this, &GraphModel::onGraphChanged);
 
@@ -97,12 +97,6 @@ QVariant GraphModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-void GraphModel::onGraphChanged()
-{
-    this->setGraph(m_graph);
-    return;
-}
-
 void GraphModel::generateMatrix()
 {
     if (m_matrix) {
@@ -114,12 +108,39 @@ void GraphModel::generateMatrix()
     m_matrix->calculate();
 }
 
+void GraphModel::onGraphChanged()
+{
+    this->setGraph(m_graph);
+    return;
+}
+
+void GraphModel::onEdgeAdded() {
+    EdgePtr edge = m_graph->edges().last();
+
+    int row = m_graph->nodes().indexOf(edge->from());
+    int column = m_graph->nodes().indexOf(edge->to());
+    int weight = edge->dynamicProperty("weight").toInt();
+    weight = weight != 0 ? weight : 1;
+
+    m_matrix->setValue(row, column, weight);
+
+    connect(edge.get(), QOverload<int>::of(&GraphTheory::Edge::dynamicPropertyChanged),
+        this, &GraphModel::onPropertyChange, Qt::UniqueConnection);
+
+    if (edge->type()->direction() == EdgeType::Direction::Bidirectional) {
+        m_matrix->setValue(column, row, weight);
+        emit this->dataChanged(this->index(0, 0), this->index(m_graph->nodes().size() - 1, m_graph->nodes().size() - 1));
+    } else {
+        emit this->dataChanged(this->index(row, column), this->index(row, column));
+    }
+
+}
+
 void GraphModel::onPropertyChange(int index) {
     Edge* edge = qobject_cast<Edge*>(sender());
 
     int row = m_graph->nodes().indexOf(edge->from());
     int column = m_graph->nodes().indexOf(edge->to());
-
     int weight = edge->dynamicProperty("weight").toInt();
 
     m_matrix->setValue(row, column, weight);

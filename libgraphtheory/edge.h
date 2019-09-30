@@ -53,6 +53,17 @@ public:
      */
     static EdgePtr create(NodePtr from, NodePtr to);
 
+    /**
+     * Creates a new Edge from @p from to @p to with type. The order of @p from and @p to will be preserved
+     * even when the edge is bidirectional, to allow unique access to the corresponding nodes.
+     *
+     * @param from          the Node this edge points from
+     * @param to            the Node this edge points to
+     * @param typeIndex     the index that corresponds to this edge type
+     * @return a Edge object
+     */
+    static EdgePtr create(NodePtr from, NodePtr to, int typeIndex);
+
     /** Destroys the edge */
     virtual ~Edge();
 
