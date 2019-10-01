@@ -112,6 +112,16 @@ void AdjacencyMatrix::destroy()
 
 int AdjacencyMatrix::getEdgeWeight(EdgePtr edge)
 {
-    int weight = edge->dynamicProperty("weight").toInt();
-    return weight ? weight : 1;
+    int weight = 1;
+
+    if (!m_weightPropertyName.isNull() && edge->dynamicProperty(m_weightPropertyName).toInt() != 0) {
+        weight = edge->dynamicProperty(m_weightPropertyName).toInt();
+    }
+    return weight;
+}
+
+void AdjacencyMatrix::setWeightPropertyName(QString propertyName)
+{
+    m_weightPropertyName = propertyName;
+    this->calculate();
 }

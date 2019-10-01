@@ -25,6 +25,7 @@
 #include <QTableView>
 #include "project/project.h"
 #include "graphmodel.h"
+#include <QLineEdit>
 
 class StructureWidget : public QWidget
 {
@@ -39,11 +40,13 @@ private:
 
 private Q_SLOTS:
     void onGraphDocumentChange(GraphTheory::GraphDocumentPtr document);
+    void setWeightProperty();
 
 private:
     Project *m_project; //!< current project
     QTableView *m_graphStructureTable;
     GraphModel *m_graphModel;
+    QLineEdit *m_weightProperty = nullptr;
 };
 
 #endif

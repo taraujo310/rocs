@@ -24,6 +24,7 @@
 #include "libgraphtheory/graphdocument.h"
 #include "libgraphtheory/adjacencymatrix.h"
 #include <QAbstractTableModel>
+#include <QString>
 
 using namespace GraphTheory;
 
@@ -40,6 +41,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const Q_DECL_OVERRIDE;
+    void setWeightPropertyName(QString weightProperty);
 
 private:
     void generateMatrix();
@@ -50,6 +52,7 @@ private:
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
     GraphTheory::AdjacencyMatrix *m_matrix = nullptr;
+    QString m_weightPropertyName = nullptr;
 };
 
 #endif

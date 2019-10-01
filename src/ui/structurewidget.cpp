@@ -25,6 +25,7 @@
 #include <QList>
 #include <QString>
 #include <QtGlobal>
+#include <QLineEdit>
 
 StructureWidget::StructureWidget(QWidget* parent)
     : QWidget(parent)
@@ -57,14 +58,29 @@ void StructureWidget::onGraphDocumentChange(GraphTheory::GraphDocumentPtr docume
 void StructureWidget::mountLayout()
 {
     QGridLayout *layout = new QGridLayout(this);
-    layout->addWidget(new QLabel("Matriz de Adjacência"));
+    layout->addWidget(new QLabel("Matriz de Adjacência"), 0, 0, 1, 2);
+
+    if (m_weightProperty) {
+        m_weightProperty->disconnect(this);
+    }
+
+    m_weightProperty = new QLineEdit;
+
+    layout->addWidget(new QLabel("Peso: "), 1, 0);
+    layout->addWidget(m_weightProperty, 1, 1);
+
+    connect(m_weightProperty, QOverload<>::of(&QLineEdit::editingFinished),
+        this, &StructureWidget::setWeightProperty);
 
     GraphTheory::GraphDocumentPtr graph = m_project->activeGraphDocument();
 
     m_graphModel->setGraph(graph);
 
     m_graphStructureTable->setModel(m_graphModel);
-    layout->addWidget(m_graphStructureTable);
+    layout->addWidget(m_graphStructureTable, 2, 0, 1, 2);
+}
 
-    layout->addWidget(new QLabel("Matriz de Incidência"));
+void StructureWidget::setWeightProperty()
+{
+    m_graphModel->setWeightPropertyName(m_weightProperty->text());
 }

@@ -119,7 +119,7 @@ void GraphModel::onEdgeAdded() {
 
     int row = m_graph->nodes().indexOf(edge->from());
     int column = m_graph->nodes().indexOf(edge->to());
-    int weight = edge->dynamicProperty("weight").toInt();
+    int weight = edge->dynamicProperty(m_weightPropertyName).toInt();
     weight = weight != 0 ? weight : 1;
 
     m_matrix->setValue(row, column, weight);
@@ -141,11 +141,19 @@ void GraphModel::onPropertyChange(int index) {
 
     int row = m_graph->nodes().indexOf(edge->from());
     int column = m_graph->nodes().indexOf(edge->to());
-    int weight = edge->dynamicProperty("weight").toInt();
+    int weight = edge->dynamicProperty(m_weightPropertyName).toInt();
+    weight = weight ? weight : 1;
 
     m_matrix->setValue(row, column, weight);
 
     if (edge->type()->direction() == EdgeType::Direction::Bidirectional) {
         m_matrix->setValue(column, row, weight);
     }
+}
+
+void GraphModel::setWeightPropertyName(QString propertyName)
+{
+    m_weightPropertyName = propertyName;
+    m_matrix->setWeightPropertyName(m_weightPropertyName);
+    emit this->dataChanged(this->index(0, 0), this->index(m_graph->nodes().size() - 1, m_graph->nodes().size() - 1));
 }
