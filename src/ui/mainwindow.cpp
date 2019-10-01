@@ -236,7 +236,7 @@ QWidget* MainWindow::setupSidePanel()
 
     // adjacency list
     m_structure = new StructureWidget(panel);
-    sideDock->addDock(m_structure, "Estrutura do Grafo", QIcon::fromTheme("documentation"));
+    sideDock->addDock(m_structure, i18nc("@title:intoolbar", "Graph Structure"), QIcon::fromTheme("documentation"));
 
     return panel;
 }

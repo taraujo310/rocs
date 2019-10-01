@@ -16,9 +16,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+
 #include "structurewidget.h"
 #include "graphmodel.h"
 #include "project/project.h"
+
 #include <QGridLayout>
 #include <QLabel>
 #include <QTableView>
@@ -26,6 +28,8 @@
 #include <QString>
 #include <QtGlobal>
 #include <QLineEdit>
+
+#include <KLocalizedString>
 
 StructureWidget::StructureWidget(QWidget* parent)
     : QWidget(parent)
@@ -58,7 +62,7 @@ void StructureWidget::onGraphDocumentChange(GraphTheory::GraphDocumentPtr docume
 void StructureWidget::mountLayout()
 {
     QGridLayout *layout = new QGridLayout(this);
-    layout->addWidget(new QLabel("Matriz de Adjacência"), 0, 0, 1, 2);
+    layout->addWidget(new QLabel(i18nc("@title:group", "Adjacency Matrix")), 0, 0, 1, 2);
 
     if (m_weightProperty) {
         m_weightProperty->disconnect(this);
@@ -66,7 +70,7 @@ void StructureWidget::mountLayout()
 
     m_weightProperty = new QLineEdit;
 
-    layout->addWidget(new QLabel("Peso: "), 1, 0);
+    layout->addWidget(new QLabel(i18nc("@label:textbox", "Weight%1", ": ")), 1, 0);
     layout->addWidget(m_weightProperty, 1, 1);
 
     connect(m_weightProperty, QOverload<>::of(&QLineEdit::editingFinished),
