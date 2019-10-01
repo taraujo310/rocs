@@ -17,8 +17,8 @@
 */
 
 
-#include "structurewidget.h"
-#include "graphmodel.h"
+#include "graphstructurewidget.h"
+#include "adjacencymatrixmodel.h"
 #include "project/project.h"
 
 #include <QGridLayout>
@@ -31,15 +31,15 @@
 
 #include <KLocalizedString>
 
-StructureWidget::StructureWidget(QWidget* parent)
+GraphStructureWidget::GraphStructureWidget(QWidget* parent)
     : QWidget(parent)
     , m_project(Q_NULLPTR)
 {
-    m_graphModel = new GraphModel(this);
+    m_adjacencyMatrixModel = new AdjacencyMatrixModel(this);
     m_graphStructureTable = new QTableView(this);
 }
 
-void StructureWidget::setProject(Project *project)
+void GraphStructureWidget::setProject(Project *project)
 {
     if (m_project) {
         m_project->disconnect(this);
@@ -48,18 +48,18 @@ void StructureWidget::setProject(Project *project)
     m_project = project;
 
     connect(project, QOverload<GraphTheory::GraphDocumentPtr>::of(&Project::activeGraphDocumentChanged),
-        this, &StructureWidget::onGraphDocumentChange);
+        this, &GraphStructureWidget::onGraphDocumentChange);
 
     this->mountLayout();
 }
 
-void StructureWidget::onGraphDocumentChange(GraphTheory::GraphDocumentPtr document)
+void GraphStructureWidget::onGraphDocumentChange(GraphTheory::GraphDocumentPtr document)
 {
     GraphTheory::GraphDocumentPtr graph = document;
-    m_graphModel->setGraph(graph);
+    m_adjacencyMatrixModel->setGraph(graph);
 }
 
-void StructureWidget::mountLayout()
+void GraphStructureWidget::mountLayout()
 {
     QGridLayout *layout = new QGridLayout(this);
     layout->addWidget(new QLabel(i18nc("@title:group", "Adjacency Matrix")), 0, 0, 1, 2);
@@ -74,17 +74,17 @@ void StructureWidget::mountLayout()
     layout->addWidget(m_weightProperty, 1, 1);
 
     connect(m_weightProperty, QOverload<>::of(&QLineEdit::editingFinished),
-        this, &StructureWidget::setWeightProperty);
+        this, &GraphStructureWidget::setWeightProperty);
 
     GraphTheory::GraphDocumentPtr graph = m_project->activeGraphDocument();
 
-    m_graphModel->setGraph(graph);
+    m_adjacencyMatrixModel->setGraph(graph);
 
-    m_graphStructureTable->setModel(m_graphModel);
+    m_graphStructureTable->setModel(m_adjacencyMatrixModel);
     layout->addWidget(m_graphStructureTable, 2, 0, 1, 2);
 }
 
-void StructureWidget::setWeightProperty()
+void GraphStructureWidget::setWeightProperty()
 {
-    m_graphModel->setWeightPropertyName(m_weightProperty->text());
+    m_adjacencyMatrixModel->setWeightPropertyName(m_weightProperty->text());
 }

@@ -18,21 +18,21 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef STRUCTUREWIDGET_H
-#define STRUCTUREWIDGET_H
+#ifndef GRAPHSTRUCTUREWIDGET_H
+#define GRAPHSTRUCTUREWIDGET_H
 
 #include <QWidget>
 #include <QTableView>
 #include "project/project.h"
-#include "graphmodel.h"
+#include "adjacencymatrixmodel.h"
 #include <QLineEdit>
 
-class StructureWidget : public QWidget
+class GraphStructureWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit StructureWidget(QWidget* parent);
+    explicit GraphStructureWidget(QWidget* parent);
     void setProject(Project *project);
 
 private:
@@ -45,7 +45,7 @@ private Q_SLOTS:
 private:
     Project *m_project; //!< current project
     QTableView *m_graphStructureTable;
-    GraphModel *m_graphModel;
+    AdjacencyMatrixModel *m_adjacencyMatrixModel;
     QLineEdit *m_weightProperty = nullptr;
 };
 

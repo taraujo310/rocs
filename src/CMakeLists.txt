@@ -41,12 +41,12 @@ set( rocs_interface_SRCS
     ui/mainwindow.cpp
     ui/codeeditorwidget.cpp
     ui/documenttypeswidget.cpp
-    ui/structurewidget.cpp
+    ui/graphstructurewidget.cpp
     ui/grapheditorwidget.cpp
     ui/nodetypesdelegate.cpp
     ui/edgetypesdelegate.cpp
     ui/scriptoutputwidget.cpp
-    ui/graphmodel.cpp
+    ui/adjacencymatrixmodel.cpp
     project/project.cpp
     plugins/scriptapi/scriptapiwidget.cpp
     plugins/scriptapi/object.cpp

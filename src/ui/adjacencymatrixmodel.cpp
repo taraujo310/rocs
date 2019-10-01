@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "graphmodel.h"
+#include "adjacencymatrixmodel.h"
 #include "libgraphtheory/adjacencymatrix.h"
 #include "libgraphtheory/graphdocument.h"
 #include <QtGlobal>
@@ -24,11 +24,11 @@
 
 using namespace GraphTheory;
 
-GraphModel::GraphModel(QObject *parent) : QAbstractTableModel(parent)
+AdjacencyMatrixModel::AdjacencyMatrixModel(QObject *parent) : QAbstractTableModel(parent)
 {
 }
 
-void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
+void AdjacencyMatrixModel::setGraph(GraphTheory::GraphDocumentPtr graph)
 {
     beginResetModel();
 
@@ -46,19 +46,19 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
 
 
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::nodeAdded),
-        this, &GraphModel::onGraphChanged);
+        this, &AdjacencyMatrixModel::onGraphChanged);
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::nodesRemoved),
-        this, &GraphModel::onGraphChanged);
+        this, &AdjacencyMatrixModel::onGraphChanged);
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::edgeAdded),
-        this, &GraphModel::onEdgeAdded);
+        this, &AdjacencyMatrixModel::onEdgeAdded);
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::edgesRemoved),
-        this, &GraphModel::onGraphChanged);
+        this, &AdjacencyMatrixModel::onGraphChanged);
 
     for (int i = 0; i < m_graph->edges().size(); i++) {
         EdgePtr edge = m_graph->edges().at(i);
 
         connect(edge.get(), QOverload<int>::of(&GraphTheory::Edge::dynamicPropertyChanged),
-            this, &GraphModel::onPropertyChange, Qt::UniqueConnection);
+            this, &AdjacencyMatrixModel::onPropertyChange, Qt::UniqueConnection);
     }
 
     endResetModel();
@@ -66,20 +66,20 @@ void GraphModel::setGraph(GraphTheory::GraphDocumentPtr graph)
     return;
 }
 
-int GraphModel::rowCount(const QModelIndex &parent) const
+int AdjacencyMatrixModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_graph->nodes().size();
 }
 
-int GraphModel::columnCount(const QModelIndex &parent) const
+int AdjacencyMatrixModel::columnCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return m_graph->nodes().size();
 }
 
 
-QVariant GraphModel::data(const QModelIndex &index, int role) const
+QVariant AdjacencyMatrixModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || role != Qt::DisplayRole) {
         return {};
@@ -88,7 +88,7 @@ QVariant GraphModel::data(const QModelIndex &index, int role) const
     return m_matrix->getValue(index.row(), index.column());
 }
 
-QVariant GraphModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant AdjacencyMatrixModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
     Q_UNUSED(orientation);
     if (role == Qt::DisplayRole) {
@@ -97,7 +97,7 @@ QVariant GraphModel::headerData(int section, Qt::Orientation orientation, int ro
     return QVariant();
 }
 
-void GraphModel::generateMatrix()
+void AdjacencyMatrixModel::generateMatrix()
 {
     if (m_matrix) {
         m_matrix->destroy();
@@ -108,13 +108,13 @@ void GraphModel::generateMatrix()
     m_matrix->calculate();
 }
 
-void GraphModel::onGraphChanged()
+void AdjacencyMatrixModel::onGraphChanged()
 {
     this->setGraph(m_graph);
     return;
 }
 
-void GraphModel::onEdgeAdded() {
+void AdjacencyMatrixModel::onEdgeAdded() {
     EdgePtr edge = m_graph->edges().last();
 
     int row = m_graph->nodes().indexOf(edge->from());
@@ -125,7 +125,7 @@ void GraphModel::onEdgeAdded() {
     m_matrix->setValue(row, column, weight);
 
     connect(edge.get(), QOverload<int>::of(&GraphTheory::Edge::dynamicPropertyChanged),
-        this, &GraphModel::onPropertyChange, Qt::UniqueConnection);
+        this, &AdjacencyMatrixModel::onPropertyChange, Qt::UniqueConnection);
 
     if (edge->type()->direction() == EdgeType::Direction::Bidirectional) {
         m_matrix->setValue(column, row, weight);
@@ -136,7 +136,8 @@ void GraphModel::onEdgeAdded() {
 
 }
 
-void GraphModel::onPropertyChange(int index) {
+void AdjacencyMatrixModel::onPropertyChange(int index) {
+    Q_UNUSED(index);
     Edge* edge = qobject_cast<Edge*>(sender());
 
     int row = m_graph->nodes().indexOf(edge->from());
@@ -151,7 +152,7 @@ void GraphModel::onPropertyChange(int index) {
     }
 }
 
-void GraphModel::setWeightPropertyName(QString propertyName)
+void AdjacencyMatrixModel::setWeightPropertyName(QString propertyName)
 {
     m_weightPropertyName = propertyName;
     m_matrix->setWeightPropertyName(m_weightPropertyName);

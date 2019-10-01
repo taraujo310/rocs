@@ -18,8 +18,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef GRAPHMODEL_H
-#define GRAPHMODEL_H
+#ifndef ADJACENCYMATRIXMODEL_H
+#define ADJACENCYMATRIXMODEL_H
 
 #include "libgraphtheory/graphdocument.h"
 #include "libgraphtheory/adjacencymatrix.h"
@@ -28,12 +28,12 @@
 
 using namespace GraphTheory;
 
-class GraphModel : public QAbstractTableModel
+class AdjacencyMatrixModel : public QAbstractTableModel
 {
     Q_OBJECT
 
 public:
-    GraphModel(QObject *parent = nullptr);
+    AdjacencyMatrixModel(QObject *parent = nullptr);
 
     void setGraph(GraphTheory::GraphDocumentPtr graph);
 
