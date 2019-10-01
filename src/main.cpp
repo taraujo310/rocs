@@ -55,6 +55,10 @@ int main(int argc, char *argv[])
                         ki18nc("@info:credit Role", "Developer").toString(),
                         "wagner.reck@gmail.com",
                         "http://wiglot.wordpress.com");
+    aboutData.addAuthor(ki18nc("@info:credit Developer name", "Thiago Ururay").toString(),
+                        ki18nc("@info:credit Role", "Maintainer").toString(),
+                        "tufa.araujo@kde.org",
+                        "http://tururay.github.io/");
 
     app.setApplicationVersion(aboutData.version());
 
