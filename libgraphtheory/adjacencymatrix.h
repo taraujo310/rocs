@@ -44,7 +44,7 @@ public:
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
     int* m_matrix = nullptr;
-    QString m_weightPropertyName = nullptr;
+    QString m_weightPropertyName;
 
 };
 }
