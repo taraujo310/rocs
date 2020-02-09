@@ -31,20 +31,28 @@ AdjacencyMatrixModel::AdjacencyMatrixModel(QObject *parent) : QAbstractTableMode
 void AdjacencyMatrixModel::setGraph(GraphTheory::GraphDocumentPtr graph)
 {
     beginResetModel();
+    disconnectGraph();
 
+    m_graph = graph;
+
+    generateMatrix();
+    connectGraph();
+    endResetModel();
+
+    return;
+}
+
+void AdjacencyMatrixModel::disconnectGraph() {
     if (m_graph) {
         m_graph->disconnect(this);
 
-        for (int i = 0; i < m_graph->edges().size(); i++) {
-            auto edge = m_graph->edges().at(i);
+        for (auto edge : m_graph->edges()) {
             edge->disconnect(this);
         }
     }
+}
 
-    m_graph = graph;
-    generateMatrix();
-
-
+void AdjacencyMatrixModel::connectGraph() {
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::nodeAdded),
         this, &AdjacencyMatrixModel::onGraphChanged);
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::nodesRemoved),
@@ -54,16 +62,10 @@ void AdjacencyMatrixModel::setGraph(GraphTheory::GraphDocumentPtr graph)
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::edgesRemoved),
         this, &AdjacencyMatrixModel::onGraphChanged);
 
-    for (int i = 0; i < m_graph->edges().size(); i++) {
-        auto edge = m_graph->edges().at(i);
-
+    for(auto edge : m_graph->edges()) {
         connect(edge.get(), QOverload<int>::of(&GraphTheory::Edge::dynamicPropertyChanged),
             this, &AdjacencyMatrixModel::onPropertyChange, Qt::UniqueConnection);
     }
-
-    endResetModel();
-
-    return;
 }
 
 int AdjacencyMatrixModel::rowCount(const QModelIndex &parent) const

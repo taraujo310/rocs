@@ -36,6 +36,8 @@ public:
     AdjacencyMatrixModel(QObject *parent = nullptr);
 
     void setGraph(GraphTheory::GraphDocumentPtr graph);
+    void disconnectGraph();
+    void connectGraph();
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
