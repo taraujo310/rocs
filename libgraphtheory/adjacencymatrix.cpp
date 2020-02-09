@@ -55,18 +55,18 @@ void AdjacencyMatrix::calculate()
             NodePtr toNode = edge.get()->from();
 
             if (fromNode->id() == toNode->id()) { // edge is a Loop
-                m_matrix[size * i + i] = this->getEdgeWeight(edge);
+                m_matrix[size * i + i] = getEdgeWeight(edge);
             } else {
                 if (edge->type()->direction() == EdgeType::Direction::Bidirectional) {
                     NodePtr columnNode = (rowNode->id() == fromNode->id()) ? toNode : fromNode;
                     int index = m_graph->nodes().indexOf(columnNode);
 
-                    m_matrix[size * i + index] = this->getEdgeWeight(edge);
+                    m_matrix[size * i + index] = getEdgeWeight(edge);
                 } else {
                     if ((rowNode->id() != fromNode->id())) {
                         int index = m_graph->nodes().indexOf(fromNode);
 
-                        m_matrix[size * i + index] = this->getEdgeWeight(edge);
+                        m_matrix[size * i + index] = getEdgeWeight(edge);
                     }
                 }
             }
