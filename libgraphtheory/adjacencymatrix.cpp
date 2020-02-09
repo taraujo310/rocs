@@ -120,7 +120,7 @@ int AdjacencyMatrix::getEdgeWeight(EdgePtr edge)
     return weight;
 }
 
-void AdjacencyMatrix::setWeightPropertyName(QString propertyName)
+void AdjacencyMatrix::setWeightPropertyName(const QString &propertyName)
 {
     m_weightPropertyName = propertyName;
     this->calculate();

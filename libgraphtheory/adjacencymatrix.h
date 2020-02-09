@@ -39,7 +39,7 @@ public:
     int getValue(int i, int j);
     int getEdgeWeight(EdgePtr edge);
     void setValue(int i, int j, int value);
-    void setWeightPropertyName(QString propertyName);
+    void setWeightPropertyName(const QString &propertyName);
 
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
