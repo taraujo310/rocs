@@ -36,7 +36,7 @@ void AdjacencyMatrixModel::setGraph(GraphTheory::GraphDocumentPtr graph)
         m_graph->disconnect(this);
 
         for (int i = 0; i < m_graph->edges().size(); i++) {
-            EdgePtr edge = m_graph->edges().at(i);
+            auto edge = m_graph->edges().at(i);
             edge->disconnect(this);
         }
     }
@@ -55,7 +55,7 @@ void AdjacencyMatrixModel::setGraph(GraphTheory::GraphDocumentPtr graph)
         this, &AdjacencyMatrixModel::onGraphChanged);
 
     for (int i = 0; i < m_graph->edges().size(); i++) {
-        EdgePtr edge = m_graph->edges().at(i);
+        auto edge = m_graph->edges().at(i);
 
         connect(edge.get(), QOverload<int>::of(&GraphTheory::Edge::dynamicPropertyChanged),
             this, &AdjacencyMatrixModel::onPropertyChange, Qt::UniqueConnection);
@@ -117,7 +117,7 @@ void AdjacencyMatrixModel::onGraphChanged()
 }
 
 void AdjacencyMatrixModel::onEdgeAdded() {
-    EdgePtr edge = m_graph->edges().last();
+    auto edge = m_graph->edges().last();
 
     int row = m_graph->nodes().indexOf(edge->from());
     int column = m_graph->nodes().indexOf(edge->to());
@@ -140,7 +140,7 @@ void AdjacencyMatrixModel::onEdgeAdded() {
 
 void AdjacencyMatrixModel::onPropertyChange(int index) {
     Q_UNUSED(index);
-    Edge* edge = qobject_cast<Edge*>(sender());
+    auto edge = qobject_cast<Edge*>(sender());
 
     int row = m_graph->nodes().indexOf(edge->from());
     int column = m_graph->nodes().indexOf(edge->to());
