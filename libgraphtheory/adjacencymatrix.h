@@ -27,9 +27,8 @@
 namespace GraphTheory
 {
 
-class GRAPHTHEORY_EXPORT AdjacencyMatrix : public QObject
+class GRAPHTHEORY_EXPORT AdjacencyMatrix
 {
-    Q_OBJECT
 
 public:
     AdjacencyMatrix(GraphTheory::GraphDocumentPtr graph = nullptr);

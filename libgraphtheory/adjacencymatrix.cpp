@@ -28,7 +28,7 @@
 
 using namespace GraphTheory;
 
-AdjacencyMatrix::AdjacencyMatrix(GraphTheory::GraphDocumentPtr graph) : QObject()
+AdjacencyMatrix::AdjacencyMatrix(GraphTheory::GraphDocumentPtr graph)
 {
     m_graph = graph;
 }
