@@ -42,7 +42,7 @@ void AdjacencyMatrixModel::setGraph(GraphTheory::GraphDocumentPtr graph)
     }
 
     m_graph = graph;
-    this->generateMatrix();
+    generateMatrix();
 
 
     connect(m_graph.data(), QOverload<>::of(&GraphTheory::GraphDocument::nodeAdded),
@@ -112,7 +112,7 @@ void AdjacencyMatrixModel::generateMatrix()
 
 void AdjacencyMatrixModel::onGraphChanged()
 {
-    this->setGraph(m_graph);
+    setGraph(m_graph);
     return;
 }
 
@@ -131,9 +131,9 @@ void AdjacencyMatrixModel::onEdgeAdded() {
 
     if (edge->type()->direction() == EdgeType::Direction::Bidirectional) {
         m_matrix->setValue(column, row, weight);
-        emit this->dataChanged(this->index(0, 0), this->index(m_graph->nodes().size() - 1, m_graph->nodes().size() - 1));
+        emit dataChanged(index(0, 0), index(m_graph->nodes().size() - 1, m_graph->nodes().size() - 1));
     } else {
-        emit this->dataChanged(this->index(row, column), this->index(row, column));
+        emit dataChanged(index(row, column), index(row, column));
     }
 
 }
@@ -158,5 +158,5 @@ void AdjacencyMatrixModel::setWeightPropertyName(QString propertyName)
 {
     m_weightPropertyName = propertyName;
     m_matrix->setWeightPropertyName(m_weightPropertyName);
-    emit this->dataChanged(this->index(0, 0), this->index(m_graph->nodes().size() - 1, m_graph->nodes().size() - 1));
+    emit dataChanged(index(0, 0), index(m_graph->nodes().size() - 1, m_graph->nodes().size() - 1));
 }
