@@ -103,12 +103,11 @@ QVariant AdjacencyMatrixModel::headerData(int section, Qt::Orientation orientati
 
 void AdjacencyMatrixModel::generateMatrix()
 {
-    if (m_matrix) {
-        m_matrix->destroy();
+    if (!m_matrix) {
+        m_matrix = new AdjacencyMatrix(m_graph);
+        m_matrix->create();
     }
 
-    m_matrix = new AdjacencyMatrix(m_graph);
-    m_matrix->create();
     m_matrix->calculate();
 }
 

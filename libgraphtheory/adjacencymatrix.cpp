@@ -33,15 +33,9 @@ AdjacencyMatrix::AdjacencyMatrix(GraphTheory::GraphDocumentPtr graph)
     m_graph = graph;
 }
 
-int* AdjacencyMatrix::create() {
+std::vector<int> AdjacencyMatrix::create() {
     int size = m_graph->nodes().size();
-    m_matrix = new int[size * size];
-
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            m_matrix[size * i + j] = 0;
-        }
-    }
+    std::vector<int> m_matrix(size * size, 0);
 
     return m_matrix;
 }
@@ -49,6 +43,7 @@ int* AdjacencyMatrix::create() {
 void AdjacencyMatrix::calculate()
 {
     int size = m_graph->nodes().size();
+    m_matrix.resize(size * size);
 
     for (int i = 0; i < size; i++) {
         NodePtr rowNode = m_graph->nodes().at(i);
@@ -100,14 +95,6 @@ int AdjacencyMatrix::getValue(int i, int j)
 void AdjacencyMatrix::setValue(int i, int j, int value)
 {
     m_matrix[m_graph->nodes().size() * i + j] = value;
-}
-
-void AdjacencyMatrix::destroy()
-{
-    if (m_matrix) {
-        delete[] m_matrix;
-    }
-    return;
 }
 
 int AdjacencyMatrix::getEdgeWeight(EdgePtr edge)
