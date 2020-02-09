@@ -96,7 +96,7 @@ QVariant AdjacencyMatrixModel::headerData(int section, Qt::Orientation orientati
     if (role == Qt::DisplayRole) {
         return m_graph->nodes().at(section)->id();
     }
-    return QVariant();
+    return {};
 }
 
 void AdjacencyMatrixModel::generateMatrix()
