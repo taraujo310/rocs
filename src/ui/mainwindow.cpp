@@ -59,6 +59,7 @@
 #include <ktexteditor/document.h>
 
 #include "ui/documenttypeswidget.h"
+#include "ui/graphstructurewidget.h"
 #include "ui/codeeditorwidget.h"
 #include "ui/scriptoutputwidget.h"
 #include "ui/sidedockwidget.h"
@@ -77,6 +78,7 @@ MainWindow::MainWindow()
     , m_codeEditorWidget(new CodeEditorWidget(this))
     , m_graphEditorWidget(new GraphEditorWidget(this))
     , m_outputWidget(new ScriptOutputWidget(this))
+    , m_graphStructureWidget(new GraphStructureWidget(this))
 {
     setObjectName("RocsMainWindow");
     m_graphEditor = new GraphTheory::Editor();
@@ -232,6 +234,10 @@ QWidget* MainWindow::setupSidePanel()
     ScriptApiWidget* apiDoc = new ScriptApiWidget(panel);
     sideDock->addDock(apiDoc, i18nc("@title", "Scripting API"), QIcon::fromTheme("documentation"));
 
+    // adjacency list
+    m_graphStructureWidget = new GraphStructureWidget(panel);
+    sideDock->addDock(m_graphStructureWidget, i18nc("@title:intoolbar", "Graph Structure"), QIcon::fromTheme("documentation"));
+
     return panel;
 }
 
@@ -239,6 +245,7 @@ void MainWindow::setProject(Project *project)
 {
     m_codeEditorWidget->setProject(project);
     m_graphEditorWidget->setProject(project);
+    m_graphStructureWidget->setProject(project);
     m_journalWidget->openJournal(project);
     updateCaption();
 

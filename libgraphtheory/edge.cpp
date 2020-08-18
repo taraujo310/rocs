@@ -78,6 +78,16 @@ EdgePtr Edge::create(NodePtr from, NodePtr to)
     return pi;
 }
 
+EdgePtr Edge::create(NodePtr from, NodePtr to, int typeIndex)
+{
+    Q_ASSERT(typeIndex < from->document()->edgeTypes().length());
+    
+    auto edge = create(from, to);
+    edge->setType(from->document()->edgeTypes().at(typeIndex));
+
+    return edge;
+}
+
 EdgePtr Edge::self() const
 {
     return d->q;

@@ -40,6 +40,7 @@ class GraphEditorWidget;
 class QCloseEvent;
 class ScriptOutputWidget;
 class JournalEditorWidget;
+class GraphStructureWidget;
 
 class MainWindow : public KXmlGuiWindow
 {
@@ -151,6 +152,7 @@ private:
     GraphEditorWidget *m_graphEditorWidget;
     ScriptOutputWidget *m_outputWidget;
     JournalEditorWidget *m_journalWidget;
+    GraphStructureWidget *m_graphStructureWidget;
 
     // Other Bunch of stuff.
     QAction *m_runScript;
