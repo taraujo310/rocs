@@ -64,7 +64,7 @@ void AdjacencyMatrixModel::connectGraph() {
 
     for(auto edge : m_graph->edges()) {
         connect(edge.get(), QOverload<int>::of(&GraphTheory::Edge::dynamicPropertyChanged),
-            this, &AdjacencyMatrixModel::onPropertyChange, Qt::UniqueConnection);
+            this, &AdjacencyMatrixModel::onDynamicPropertyChanged, Qt::UniqueConnection);
     }
 }
 
@@ -105,7 +105,6 @@ void AdjacencyMatrixModel::generateMatrix()
 {
     if (!m_matrix) {
         m_matrix = new AdjacencyMatrix(m_graph);
-        m_matrix->create();
     }
 
     m_matrix->calculate();
@@ -114,7 +113,7 @@ void AdjacencyMatrixModel::generateMatrix()
 void AdjacencyMatrixModel::onGraphChanged()
 {
     setGraph(m_graph);
-    return;
+    m_matrix->calculate();
 }
 
 void AdjacencyMatrixModel::onEdgeAdded() {
@@ -127,19 +126,19 @@ void AdjacencyMatrixModel::onEdgeAdded() {
 
     m_matrix->setValue(row, column, weight);
 
-    connect(edge.get(), QOverload<int>::of(&GraphTheory::Edge::dynamicPropertyChanged),
-        this, &AdjacencyMatrixModel::onPropertyChange, Qt::UniqueConnection);
-
     if (edge->type()->direction() == EdgeType::Direction::Bidirectional) {
         m_matrix->setValue(column, row, weight);
+
         emit dataChanged(index(0, 0), index(m_graph->nodes().size() - 1, m_graph->nodes().size() - 1));
     } else {
         emit dataChanged(index(row, column), index(row, column));
     }
 
+    connect(edge.get(), QOverload<int>::of(&GraphTheory::Edge::dynamicPropertyChanged),
+        this, &AdjacencyMatrixModel::onDynamicPropertyChanged, Qt::UniqueConnection);
 }
 
-void AdjacencyMatrixModel::onPropertyChange(int index) {
+void AdjacencyMatrixModel::onDynamicPropertyChanged(int index) {
     Q_UNUSED(index);
     auto edge = qobject_cast<Edge*>(sender());
 

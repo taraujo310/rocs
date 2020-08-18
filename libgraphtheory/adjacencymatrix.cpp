@@ -31,21 +31,18 @@ using namespace GraphTheory;
 AdjacencyMatrix::AdjacencyMatrix(GraphTheory::GraphDocumentPtr graph)
 {
     m_graph = graph;
-}
 
-std::vector<int> AdjacencyMatrix::create() {
     int size = m_graph->nodes().size();
     std::vector<int> m_matrix(size * size, 0);
-
-    return m_matrix;
 }
 
 void AdjacencyMatrix::calculate()
 {
-    int size = m_graph->nodes().size();
-    m_matrix.resize(size * size);
+    long unsigned int size = m_graph->nodes().size();
 
-    for (int i = 0; i < size; i++) {
+    if (m_matrix.size() != size) m_matrix.resize(size * size);
+
+    for (long unsigned int i = 0; i < size; i++) {
         NodePtr rowNode = m_graph->nodes().at(i);
 
         for (int j = 0; j < rowNode->edges().size(); j++) {
@@ -55,18 +52,18 @@ void AdjacencyMatrix::calculate()
             NodePtr toNode = edge.get()->from();
 
             if (fromNode->id() == toNode->id()) { // edge is a Loop
-                m_matrix[size * i + i] = getEdgeWeight(edge);
+                setValue(i, i, getEdgeWeight(edge));
             } else {
                 if (edge->type()->direction() == EdgeType::Direction::Bidirectional) {
                     NodePtr columnNode = (rowNode->id() == fromNode->id()) ? toNode : fromNode;
                     int index = m_graph->nodes().indexOf(columnNode);
 
-                    m_matrix[size * i + index] = getEdgeWeight(edge);
+                    setValue(i, index, getEdgeWeight(edge));
                 } else {
                     if ((rowNode->id() != fromNode->id())) {
                         int index = m_graph->nodes().indexOf(fromNode);
 
-                        m_matrix[size * i + index] = getEdgeWeight(edge);
+                        setValue(i, index, getEdgeWeight(edge));
                     }
                 }
             }
@@ -110,5 +107,9 @@ int AdjacencyMatrix::getEdgeWeight(EdgePtr edge)
 void AdjacencyMatrix::setWeightPropertyName(const QString &propertyName)
 {
     m_weightPropertyName = propertyName;
-    this->calculate();
+    calculate();
+}
+
+int AdjacencyMatrix::size() {
+    return m_matrix.size();
 }

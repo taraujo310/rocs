@@ -32,18 +32,19 @@ class GRAPHTHEORY_EXPORT AdjacencyMatrix
 
 public:
     AdjacencyMatrix(GraphTheory::GraphDocumentPtr graph = nullptr);
-    std::vector<int> create();
     void calculate();
     void print();
     int getValue(int i, int j);
     int getEdgeWeight(EdgePtr edge);
     void setValue(int i, int j, int value);
     void setWeightPropertyName(const QString &propertyName);
+    int size();
 
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
     std::vector<int> m_matrix;
     QString m_weightPropertyName;
+    int lastSize;
 
 };
 }

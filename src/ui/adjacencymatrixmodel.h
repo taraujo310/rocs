@@ -48,8 +48,9 @@ public:
 private:
     void generateMatrix();
     void onGraphChanged();
-    void onPropertyChange(int index);
+    void onDynamicPropertyChanged(int index);
     void onEdgeAdded();
+    void onEdgeRemoved();
 
 private:
     GraphTheory::GraphDocumentPtr m_graph = nullptr;
